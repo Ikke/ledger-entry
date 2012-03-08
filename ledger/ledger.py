@@ -37,7 +37,12 @@ def run(stdscr):
         entries = read_csv(input_filename)
         entries = complete_entries(entries, accounts, left_buffer)
 
-    right_buffer.input_chr()
+        f = open("test.dat", 'w')
+        for entry in entries:
+            f.write(entry.as_ledger_entry())
+            f.write("\n\n")
+
+    left_buffer.input_chr("Finished, press any key to continue")
 
 def print_accounts(buffer, accounts):
     for index, account in enumerate(accounts):
