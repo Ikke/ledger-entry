@@ -55,6 +55,8 @@ def complete_entries(entries, accounts, buffer):
             entry.account_from = prompt_account("Account from: ", buffer, accounts)
         buffer.writeln()
 
+    return entries
+
 def prompt_account(prompt, buffer, accounts):
     account_response = buffer.input(prompt)
 
