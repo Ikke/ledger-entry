@@ -26,6 +26,10 @@ class Buffer(object):
         self.writeln(input)
         return input
 
+    def clear(self):
+        self.buffer = [""]
+        self.refresh()
+
     def refresh(self):
         self.window.clear()
         for nr, line in enumerate(self.buffer[-self.lines:]):
