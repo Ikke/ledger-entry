@@ -1,19 +1,19 @@
 import argparse
+from io import TextIOBase
 import os
+import sys
+from ledger.account import Accounts
 from ledger.actions import read_csv, complete_entries, read_ledger_accounts
 from ledger.buffer import Buffer
 import curses
 import json
 
-parser = argparse.ArgumentParser(description="Adds entries to a ledger file")
-parser.add_argument('action')
-parser.add_argument('input')
 
 actions = {
     'parsecsv': read_csv
 }
 
-def run(stdscr):
+def run(stdscr, args):
     curses.echo()
 
     lines = int(os.environ['LINES'])
@@ -27,7 +27,6 @@ def run(stdscr):
     right_window = curses.newwin(lines, half_width, 0, half_width + 2)
     right_buffer = Buffer(right_window, lines)
 
-    args = parser.parse_args()
     input_filename = os.path.expanduser(args.input)
     if args.action == 'parsecsv':
         accounts = sorted(list(read_ledger_accounts(os.path.expanduser("~/Documents/boekhouding.dat"))))
