@@ -29,9 +29,13 @@ def run(stdscr, args):
 
     input_filename = os.path.expanduser(args.input)
     if args.action == 'parsecsv':
-        accounts = sorted(list(read_ledger_accounts(os.path.expanduser("~/Documents/boekhouding.dat"))))
+        accounts = Accounts(right_buffer)
 
-        print_accounts(right_buffer, accounts)
+        if args.ledger_file:
+            account_list = sorted(list(read_ledger_accounts(os.path.expanduser(args.ledger_file[0]))))
+            accounts.add_accounts(account_list, False)
+            accounts.sort()
+            accounts.print_accounts()
 
         entries = read_csv(input_filename)
         entries = complete_entries(entries, accounts, left_buffer)

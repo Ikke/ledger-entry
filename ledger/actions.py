@@ -70,6 +70,7 @@ def prompt_account(prompt, buffer, accounts):
     else:
         tmp_account = account_response
 
+    accounts.add_account(tmp_account)
     return tmp_account
 
 def read_ledger_accounts(path):
