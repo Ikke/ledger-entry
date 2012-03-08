@@ -11,7 +11,7 @@ class Buffer(object):
         self.buffer.extend(lines[1:])
         self.refresh()
 
-    def writeln(self, text):
+    def writeln(self, text = ""):
         self.write(text + "\n")
 
     def input(self, text = ""):
@@ -30,5 +30,5 @@ class Buffer(object):
         self.window.clear()
         for nr, line in enumerate(self.buffer[-self.lines:]):
             self.window.addstr(nr, 0, line)
-
+        self.window.refresh()
 

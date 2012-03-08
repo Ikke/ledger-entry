@@ -1,8 +1,9 @@
 import argparse
 import os
-from ledger.actions import read_csv, complete_entries
+from ledger.actions import read_csv, complete_entries, read_ledger_accounts
 from ledger.buffer import Buffer
 import curses
+import json
 
 parser = argparse.ArgumentParser(description="Adds entries to a ledger file")
 parser.add_argument('action')
@@ -13,15 +14,31 @@ actions = {
 }
 
 def run(stdscr):
-    lines = int(os.environ['LINES'])
     curses.echo()
-    buffer = Buffer(stdscr, lines)
+
+    lines = int(os.environ['LINES'])
+    columns = int(os.environ['COLUMNS'])
+
+    half_width = int(columns / 2)
+
+    left_window = curses.newwin(lines, half_width)
+    left_buffer = Buffer(left_window, lines)
+
+    right_window = curses.newwin(lines, half_width, 0, half_width + 2)
+    right_buffer = Buffer(right_window, lines)
+
     args = parser.parse_args()
     input_filename = os.path.expanduser(args.input)
     if args.action == 'parsecsv':
-        entries = read_csv(input_filename, os.path.expanduser("~/Documents/boekhouding.dat"))
-        entries = complete_entries(buffer, entries)
-        stdscr.refresh()
-        stdscr.getch()
+        accounts = sorted(list(read_ledger_accounts(os.path.expanduser("~/Documents/boekhouding.dat"))))
 
+        print_accounts(right_buffer, accounts)
 
+        entries = read_csv(input_filename)
+        entries = complete_entries(entries, accounts, left_buffer)
+
+    right_buffer.input_chr()
+
+def print_accounts(buffer, accounts):
+    for index, account in enumerate(accounts):
+        buffer.writeln("{:02}: {}".format(index, account))

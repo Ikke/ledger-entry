@@ -5,8 +5,7 @@ from datetime import datetime
 from ledger.entry import Entry
 import curses
 
-def read_csv(csv_file, ledger_file):
-    read_ledger_accounts(ledger_file)
+def read_csv(csv_file):
 
     f = open(csv_file)
     reader = csv.reader(f, delimiter='\t')
@@ -21,51 +20,75 @@ def read_csv(csv_file, ledger_file):
 
     return entries
 
-def complete_entries(buffer, entries):
+def complete_entries(entries, accounts, buffer):
     """
     @entries Entry[]
     """
-    for entry in entries:
-        buffer.writeln("Description: {}".format(entry.description))
-        buffer.writeln("Date: {}".format(entry.date))
-        buffer.writeln("Amount: {}".format(entry.amount))
 
-        action = buffer.input_chr("Action ((E)dit description, (S)ave) > ")
+    index = 0
+    max = len(entries)
+    while index < max:
+        entry = entries[index]
+        buffer.writeln(str(entry))
+
+        action = buffer.input_chr("Action ((E)dit description, Set (A)ccounts, (S)ave) > ")
+
+        if action == "s":
+            if not entry.account_from or not entry.account_to:
+                confirm = buffer.input_chr("Account information not complete. Still want to edit? (Y/n)")
+                if confirm != "n":
+                    action = "a"
+                else:
+                    index += 1
+            else:
+                index += 1
 
         if action == "e":
-            buffer.write("Description: ")
-            #entry.description = buffer.getstr()
+            entry.description = buffer.input("Description: ")
+        if action == "a":
+            if entry.amount > 0:
+                prompt = "Account to (income): "
+            else:
+                prompt = "Account to (expense): "
 
-        if entry.amount > 0:
-            prompt = "Account to (income): "
-        else:
-            prompt = "Account to (expense): "
+            entry.account_to = prompt_account(prompt, buffer, accounts)
+            entry.account_from = prompt_account("Account from: ", buffer, accounts)
+        buffer.writeln()
 
-        entry.account_to.append(buffer.input(prompt))
-        entry.account_from.append(buffer.input("Account from: "))
+def prompt_account(prompt, buffer, accounts):
+    account_response = buffer.input(prompt)
+
+    if account_response.isdigit():
+        tmp_account = accounts[int(account_response)]
+        buffer.write(prompt + tmp_account + ":")
+        account_part = buffer.input()
+
+        if account_part != "":
+            tmp_account += ":" + account_part
+    else:
+        tmp_account = account_response
+
+    return tmp_account
 
 def read_ledger_accounts(path):
     f = open(path)
 
-    accounts = {}
+    accounts = set()
     account_pattern = re.compile('([a-zA-Z:]+)\s+€[-0-9.]+')
 
     for line in f:
         matches = account_pattern.findall(line)
         if matches:
             account = matches[0]
-            accounts = parse_account(account, accounts)
-
-#    write(json.dumps(accounts, indent=4))
-
-
-def parse_account(account, accounts):
-    subaccounts = account.split(":")
-    current_account = accounts
-    for subaccount in subaccounts:
-        if not subaccount in current_account:
-            current_account[subaccount] = {}
-        current_account = current_account[subaccount]
+            accounts.add(account)
+            for parent_account in get_parent_accounts(account):
+                accounts.add(parent_account)
 
     return accounts
 
+def get_parent_accounts(account):
+    parts = account.split(":")[:-1]
+    parent_accounts = []
+    for i in range(len(parts), 0, -1):
+        parent_accounts.append(":".join(parts[:i]))
+    return parent_accounts
