@@ -46,7 +46,3 @@ def run(stdscr, args):
             f.write("\n\n")
 
     left_buffer.input_chr("Finished, press any key to continue")
-
-def print_accounts(buffer, accounts):
-    for index, account in enumerate(accounts):
-        buffer.writeln("{:02}: {}".format(index, account))
