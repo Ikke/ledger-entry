@@ -13,19 +13,24 @@ actions = {
     'parsecsv': read_csv
 }
 
-def run(stdscr, args):
-    curses.echo()
-
+def setup_ncurses():
     lines = int(os.environ['LINES'])
     columns = int(os.environ['COLUMNS'])
-
     half_width = int(columns / 2)
 
     left_window = curses.newwin(lines, half_width)
-    left_buffer = Buffer(left_window, lines)
-
     right_window = curses.newwin(lines, half_width, 0, half_width + 2)
+
+    left_buffer = Buffer(left_window, lines)
     right_buffer = Buffer(right_window, lines)
+
+    return left_buffer, right_buffer
+
+
+def run(stdscr, args):
+    curses.echo()
+
+    left_buffer, right_buffer = setup_ncurses()
 
     input_filename = os.path.expanduser(args.input)
     if args.action == 'parsecsv':
