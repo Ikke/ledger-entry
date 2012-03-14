@@ -7,6 +7,7 @@ parser = argparse.ArgumentParser(description="Adds entries to a ledger file")
 parser.add_argument('action')
 parser.add_argument('input')
 parser.add_argument('--ledger-file', dest='ledger_file', nargs=1)
+parser.add_argument('--output', dest='output', nargs=1)
 
 args = parser.parse_args()
 

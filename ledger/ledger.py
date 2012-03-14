@@ -45,7 +45,11 @@ def run(stdscr, args):
         entries = read_csv(input_filename)
         entries = complete_entries(entries, accounts, left_buffer)
 
-        f = open("test.dat", 'w')
+        if args.output[0] == "-":
+            f = sys.stdout
+        else:
+            f = open(args.output[0], 'a')
+
         for entry in entries:
             f.write(entry.as_ledger_entry())
             f.write("\n\n")
