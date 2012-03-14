@@ -1,14 +1,19 @@
 class Buffer(object):
 
-    def __init__(self, window, lines):
+    def __init__(self, window, lines, columns=0):
         self.window = window
         self.lines = lines
         self.buffer = [""]
+        self.columns = columns
 
     def write(self, text):
         lines = text.split("\n")
         self.buffer[-1] += lines[0]
         self.buffer.extend(lines[1:])
+
+        for i in range(len(self.buffer) - len(lines) - 1, len(self.buffer)):
+            self._fix_long_line(i)
+
         self.refresh()
 
     def writeln(self, text = ""):
@@ -36,3 +41,17 @@ class Buffer(object):
             self.window.addstr(nr, 0, line)
         self.window.refresh()
 
+    def _fix_long_line(self, line):
+        if not self.columns: return
+
+        if len(self.buffer[line]) > self.columns:
+            part = self.buffer[line]
+            parts = []
+            while len(part):
+                parts.append(part[:self.columns])
+                part = part[self.columns:]
+
+            parts.reverse()
+            del(self.buffer[line])
+            for part in parts:
+                self.buffer.insert(line, part)

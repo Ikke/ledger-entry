@@ -21,7 +21,7 @@ def setup_ncurses():
     left_window = curses.newwin(lines, half_width)
     right_window = curses.newwin(lines, half_width, 0, half_width + 2)
 
-    left_buffer = Buffer(left_window, lines)
+    left_buffer = Buffer(left_window, lines, half_width)
     right_buffer = Buffer(right_window, lines)
 
     return left_buffer, right_buffer
