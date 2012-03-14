@@ -35,7 +35,7 @@ def complete_entries(entries, accounts, buffer):
 
         if action == "s":
             if not entry.account_from or not entry.account_to:
-                confirm = buffer.input_chr("Account information not complete. Still want to edit? (Y/n)")
+                confirm = buffer.input_chr("Account information not complete. Still want to edit? (Y/n) ")
                 if confirm != "n":
                     action = "a"
                 else:
