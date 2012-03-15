@@ -45,7 +45,7 @@ def run(stdscr, args):
         entries = read_csv(input_filename)
         entries = complete_entries(entries, accounts, left_buffer)
 
-        if args.output[0] == "-":
+        if not args.output or args.output[0] == "-":
             f = sys.stdout
         else:
             f = open(args.output[0], 'a')
