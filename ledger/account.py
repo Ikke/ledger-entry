@@ -19,6 +19,9 @@ class Accounts(object):
     def __getitem__(self, item):
         return self.accounts[item]
 
+    def __len__(self):
+        return len(self.accounts)
+
     def print_accounts(self):
         self.buffer.clear()
         for index, account in enumerate(self.accounts):

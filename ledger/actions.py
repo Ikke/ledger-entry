@@ -61,12 +61,17 @@ def prompt_account(prompt, buffer, accounts):
     account_response = buffer.input(prompt)
 
     if account_response.isdigit():
-        tmp_account = accounts[int(account_response)]
-        buffer.write(prompt + tmp_account + ":")
-        account_part = buffer.input()
+        nr = int(account_response)
+        if nr < len(accounts):
+            tmp_account = accounts[int(account_response)]
+            buffer.write(prompt + tmp_account + ":")
+            account_part = buffer.input()
 
-        if account_part != "":
-            tmp_account += ":" + account_part
+            if account_part != "":
+                tmp_account += ":" + account_part
+        else:
+            buffer.writeln("E: Number out of range")
+            tmp_account = prompt_account(prompt, buffer, accounts)
     else:
         tmp_account = account_response
 
