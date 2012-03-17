@@ -1,7 +1,7 @@
 # TODO
 
  - Split statements
+ - Calculate equity
  - Separately read in accounts from ledger file
  - Cache accounts
- - Set default 'from' account ?
  - Add unittests

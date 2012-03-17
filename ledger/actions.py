@@ -25,6 +25,8 @@ def complete_entries(entries, accounts, buffer):
     @entries Entry[]
     """
 
+    account_from = prompt_account("Default account from: ", buffer, accounts)
+
     index = 0
     max = len(entries)
     while index < max:
@@ -52,7 +54,7 @@ def complete_entries(entries, accounts, buffer):
                 prompt = "Account to (expense): "
 
             entry.account_to = prompt_account(prompt, buffer, accounts)
-            entry.account_from = prompt_account("Account from: ", buffer, accounts)
+            entry.account_from = account_from
         buffer.writeln()
 
     return entries
