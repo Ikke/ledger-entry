@@ -3,7 +3,7 @@ import csv
 import re
 from datetime import datetime
 from ledger.entry import Entry
-import curses
+from decimal import Decimal
 
 def read_csv(csv_file):
 
@@ -14,7 +14,7 @@ def read_csv(csv_file):
     for k in reader:
         entry = Entry()
         entry.date = datetime.strptime(k[2], "%Y%m%d").strftime('%Y/%m/%d')
-        entry.amount = float(k[6].replace(",", "."))
+        entry.amount = Decimal(k[6].replace(",", "."))
         entry.description = k[7]
         entries.append(entry)
 
