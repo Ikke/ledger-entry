@@ -15,9 +15,9 @@ class Entry:
         return ledger_entry
 
     def __str__(self):
-        output = "Date: {self.date}\n" \
-                 "Amount: {self.amount}\n" \
-                 "Description: {self.description}\n"
+        output = "Description: {self.description}\n\n" \
+                 "Date: {self.date}\n" \
+                 "Amount: {self.amount}\n"
 
         output += "Account from: {}\n".format(self.account_from)
 

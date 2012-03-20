@@ -31,6 +31,10 @@ class Buffer(object):
         self.writeln(input)
         return input
 
+    def scroll_top(self):
+        #TODO: Scroll instead of clear
+        self.clear()
+
     def clear(self):
         self.buffer = [""]
         self.refresh()

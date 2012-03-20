@@ -31,6 +31,10 @@ def complete_entries(entries, accounts, buffer):
     max = len(entries)
     while index < max:
         entry = entries[index]
+
+        buffer.scroll_top()
+        buffer.writeln("Entry {} of {}\n".format(index + 1, max))
+
         buffer.writeln(str(entry))
 
         action = buffer.input_chr("Action ((E)dit description, Set (A)ccounts, (S)ave) > ")
@@ -47,6 +51,7 @@ def complete_entries(entries, accounts, buffer):
 
         if action == "e":
             entry.description = buffer.input("Description: ")
+
         if action == "a":
             if entry.amount > 0:
                 prompt = "Account to (income): "
