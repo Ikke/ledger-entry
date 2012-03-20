@@ -37,7 +37,7 @@ def complete_entries(entries, accounts, buffer):
 
         buffer.writeln(str(entry))
 
-        action = buffer.input_chr("Action ((E)dit description, Set (A)ccounts, (S)ave) > ")
+        action = buffer.input_chr("Action ((E)dit description, Set (A)ccounts, S(P)lit, (S)ave) > ")
 
         if action == "s":
             if not entry.account_from or not entry.account_to:
@@ -60,6 +60,20 @@ def complete_entries(entries, accounts, buffer):
 
             entry.account_to = prompt_account(prompt, buffer, accounts)
             entry.account_from = account_from
+
+        if action == "p":
+            nr_of_statements = int(buffer.input("How many statements? "))
+            amount_left = entry.amount
+            entry.amount = Decimal(buffer.input("Amount for statement 1: "))
+            amount_left -= entry.amount
+            for i in range(1, nr_of_statements):
+                new_entry = Entry()
+                new_entry.amount = Decimal(buffer.input("Amount of statement {} ({} left): ".format(i+1, amount_left)))
+                new_entry.date = entry.date
+                amount_left -= new_entry.amount
+                entries.insert(index+i, new_entry)
+                max += nr_of_statements - 2
+
         buffer.writeln()
 
     return entries
