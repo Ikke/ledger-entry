@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import os
 import sys
 from ledger import ledger
 import curses
@@ -22,7 +23,24 @@ parser.add_argument(
 
 args = parser.parse_args()
 
+params = {}
+
+if args.ledger_file:
+    params['ledger_file'] = args.ledger_file[0]
+elif os.environ['LEDGER_FILE']:
+    params['ledger_file'] = os.environ['LEDGER_FILE']
+
+if args.output:
+    params['output'] = open(args.output[0], 'a')
+elif params.get('ledger_file'):
+    params['output'] = open(params['ledger_file'], 'a')
+else:
+    params['output'] = sys.stdout
+
+params['action'] = args.action
+params['input'] = args.input
+
 try:
-    curses.wrapper(ledger.run, args)
+    curses.wrapper(ledger.run, params)
 except KeyboardInterrupt:
     pass

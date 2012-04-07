@@ -32,12 +32,18 @@ def run(stdscr, args):
 
     left_buffer, right_buffer = setup_ncurses()
 
-    input_filename = os.path.expanduser(args.input)
-    if args.action == 'parsecsv':
+    input_filename = os.path.expanduser(args['input'])
+    if args['action'] == 'parsecsv':
         accounts = Accounts(right_buffer)
 
-        if args.ledger_file:
-            account_list = sorted(list(read_ledger_accounts(os.path.expanduser(args.ledger_file[0]))))
+        if args['ledger_file']:
+            account_list = sorted(
+                list(
+                    read_ledger_accounts(
+                        os.path.expanduser(args['ledger_file'])
+                    )
+                )
+            )
             accounts.add_accounts(account_list, False)
             accounts.sort()
             accounts.print_accounts()
@@ -45,10 +51,7 @@ def run(stdscr, args):
         entries = read_csv(input_filename)
         entries = complete_entries(entries, accounts, left_buffer)
 
-        if not args.output or args.output[0] == "-":
-            f = sys.stdout
-        else:
-            f = open(args.output[0], 'a')
+        f = args['output']
 
         for entry in entries:
             f.write(entry.as_ledger_entry())
