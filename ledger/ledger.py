@@ -3,8 +3,9 @@ from io import TextIOBase
 import os
 import sys
 from ledger.account import Accounts
-from ledger.actions import read_csv, complete_entries, read_ledger_accounts
+from ledger.actions import read_csv, read_ledger_accounts
 from ledger.buffer import Buffer
+from ledger.completer import Completer
 import curses
 import json
 
@@ -49,7 +50,10 @@ def run(stdscr, args):
             accounts.print_accounts()
 
         entries = read_csv(input_filename)
-        entries = complete_entries(entries, accounts, left_buffer)
+
+        completer = Completer(left_buffer, accounts, entries)
+
+        entries = completer.complete_entries()
 
         f = args['output']
 
