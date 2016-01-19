@@ -9,7 +9,7 @@ class Entry:
     def as_ledger_entry(self):
         ledger_entry = "{} {}\n".format(self.date, self.description)
 
-        ledger_entry += "    {}{}{}\n".format(self.account_to, " " * 20, self.amount)
+        ledger_entry += "    {}{}EUR {}\n".format(self.account_to, " " * 20, self.amount)
         ledger_entry += "    {}".format(self.account_from)
 
         return ledger_entry
